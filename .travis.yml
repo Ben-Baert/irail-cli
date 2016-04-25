@@ -6,10 +6,8 @@ python:
 
 #env:
 
-
-
 install:
-    - pip install tox
+    - pip install requests 
 
 script:
     - py.test 
