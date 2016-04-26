@@ -1,5 +1,9 @@
-Version 0.0.1 2016-05-01
-------------------------
+Planned: Version 0.0.2 2016-05-05
+  - Write tests for liveboard
+  - Write tests for route
+  - Write tests for vehicle
+Planned: Version 0.0.1 2016-05-01
+---------------------------------
   - Expose liveboard
   - Expose route
   - Expose vehicle
