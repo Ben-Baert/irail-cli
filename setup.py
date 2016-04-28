@@ -13,6 +13,7 @@ setup(name='irail-cli',
       url='http://github.com/Ben-Baert/iRail',
       classifiers=[
           'Development Status :: 2 - Pre-Alpha',
+          'Programming Language :: Python :: 2.7',
           'Programming Language :: Python :: 3.5',
           'License :: OSI Approved :: MIT License',
           'Topic :: Utilities'] 
