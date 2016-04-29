@@ -1,3 +1,8 @@
+import requests
+from datetime import datetime
+import click
+
+
 """
 Utilities used in at least 2 of the 3
 features go here.
@@ -41,7 +46,7 @@ def parse_direction(direction):
 
 def safe_trains_extract(irail_json_object):
     try:
-        return json_object["departures"]["departure"]
+        return irail_json_object["departures"]["departure"]
     except KeyError:
         click.echo("No trains!")
         return []
@@ -57,11 +62,19 @@ def get_station(suggestion):
     """
     headers = {'Content-type': 'application/json',
                'Accept': 'text/plain'}
-    json_data = (requests.get(
-                    "https://irail.be/stations/NMBS/",
-                    {"q": suggestion},
-                    headers=headers)
-                    .json())
+    try:
+        json_data = (requests.get(
+                        "https://irail.be/stations/NMBS/",
+                        {"q": suggestion},
+                        headers=headers)
+                        .json())
+    except json.decoder.JSONDecodeError:
+        click.echo(
+                """
+                The API doesn't seem to respond properly.
+                Please try again later!
+                """)
+        raise SystemExit(0)
     suggestions = json_data["@graph"]
 
     if len(suggestions) == 1:

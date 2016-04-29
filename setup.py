@@ -16,14 +16,18 @@ setup(name='irail-cli',
           'Programming Language :: Python :: 2.7',
           'Programming Language :: Python :: 3.5',
           'License :: OSI Approved :: MIT License',
-          'Topic :: Utilities'] 
+          'Topic :: Utilities'], 
       author='Ben Baert',
       author_email='benbaert@tuta.io',
       license='MIT',
-      packages=['irail'],
-      install_requires['requests' ],
+      packages=['irail', 'irail.commands'],
+      install_requires=['requests', 'click'],
       include_package_data=True,
       setup_requires=['pytest-runner'],
       tests_require=['pytest'],
+      entry_points='''
+              [console_scripts]
+              irail=irail.cli:cli
+              ''',
       zip_safe=False)
 
