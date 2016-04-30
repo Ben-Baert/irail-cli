@@ -1,6 +1,7 @@
 import requests
 from datetime import datetime
 import click
+import json
 
 
 """
@@ -75,6 +76,13 @@ def get_station(suggestion):
                 Please try again later!
                 """)
         raise SystemExit(0)
+    except requests.exceptions.ConnectionError:
+        click.echo(
+                """
+                Either the API is down or your internet connection isn't
+                working properly. Please try again later.
+                """)
+        raise SystemExit(0)
     suggestions = json_data["@graph"]
 
     if len(suggestions) == 1:
@@ -92,10 +100,7 @@ def get_station(suggestion):
     else:
         for index, station in enumerate(suggestions):
             click.echo(str(index) + ": " + station["name"])
-        station_index = click.prompt(
-                            """
-                            Which station do you mean by {0}?
-                            """.format(suggestion),
+        station_index = click.prompt("Which station do you mean by {0}?".format(suggestion),
                             type=int)
 
     return suggestions[station_index]["name"]

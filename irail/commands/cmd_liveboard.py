@@ -57,11 +57,9 @@ def make_station_header(json_object, destination_filter, vehicle_filter, context
     """
     name = json_object["stationinfo"]["standardname"]
     station_time = parse_time(json_object["timestamp"])
-    title = (name +
-            (" (direction: " + (destination_filter or vehicle_filter) +")")
-            if destination_filter or vehicle_filter else "")
-    click.secho(station_time +
-                " " +
+    direction = destination_filter or vehicle_filter or "all"
+    title = name + " (direction: " + direction + ")"
+    click.secho(station_time + " " +
                 str.center(title, context.terminal_width - 6),
                 reverse=True)
     return name
