@@ -66,7 +66,7 @@ def make_station_header(json_object, destination_filter, vehicle_filter, context
 
 
 @click.command('liveboard')
-@click.argument('station_suggestion')
+@click.argument('station')
 @click.option('--destination', '-d', default=None, multiple=True,
               help='Non-comprehensive but efficient filter that only checks the destination of each vehicle')
 @click.option('--vehicle_filter', '-v', default=None,
@@ -74,7 +74,7 @@ def make_station_header(json_object, destination_filter, vehicle_filter, context
 @click.option('--continuous', '-c', is_flag=True,
               help='Refresh liveboard every 60 seconds',)
 @pass_context
-def cli(context, station_suggestion, destination, vehicle_filter, continuous):
+def cli(context, station, destination, vehicle_filter, continuous):
     """
     Show the upcoming trains for a certain trainstation.
     Very similar to what you would see on the screen
@@ -100,7 +100,7 @@ def cli(context, station_suggestion, destination, vehicle_filter, continuous):
     irail liveboard Gent-Sint-Pieters --vehicle-filter Aalter
     """
     # if station not found, give suggestions
-    station = get_station(station_suggestion)
+    station = get_station(station)
     click.clear()
     while True:
         r = requests.get("http://api.irail.be/liveboard/",
