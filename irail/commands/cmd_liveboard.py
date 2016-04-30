@@ -118,7 +118,7 @@ def cli(context, station, destination, vehicle_filter, continuous):
             platform = parse_platform(train["platform"], train["platforminfo"]["normal"])            
             direction = parse_direction(train["station"])
 
-            if destination and not any(direction.startswith(d) for d in destination):
+            if destination and not any(direction.lower().startswith(d.lower()) for d in destination):
                 continue
 
             vehicle_filter_passed, arrival_time = vehicle_filter_check(train["vehicle"], station_name, vehicle_filter) 
