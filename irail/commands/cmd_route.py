@@ -130,9 +130,12 @@ def get_connections(from_station, to_station, time=None, date=None, time_prefere
 @click.command()
 @click.argument('from_station')
 @click.argument('to_station')
-@click.option('--time', '-t', default=None)
-@click.option('--date', '-d', default=None)
-@click.option('--selection', '-s', default='depart', type=click.Choice(['depart', 'arrive']))
+@click.option('--time', '-t', default=None,
+              help="Format: HHMM. Defaults to current time")
+@click.option('--date', '-d', default=None,
+              help="Format: DDMMYYYY. Defaults to current date")
+@click.option('--selection', '-s', default='depart', type=click.Choice(['depart', 'arrive']),
+              help="Choose 'depart' or 'arrive' at specified date/time. Defaults to 'depart'")
 @pass_context
 def cli(context, from_station, to_station, time, date, selection):
     from_station = get_station(from_station)
