@@ -76,7 +76,7 @@ def expand_connection(context, connection):
     arrival_platform = get_platform(arrival_info)
     arrival_direction = arrival_info["direction"]["name"]
 
-    empty_slot = " " * 10
+    empty_slot = " " * 12
     duration = get_duration(connection)
     nr_of_vias = get_nr_of_vias(connection)
 
