@@ -2,7 +2,7 @@ import click
 import requests
 from time import sleep
 import json
-from irail.cli import pass_context 
+from irail.cli import pass_context
 from irail.commands.utils import *
 
 
@@ -23,8 +23,8 @@ def get_vehicle_stops(vehicle_id):
                 "http://api.irail.be/vehicle/",
                 params={
                     "fast": "true",
-                   "format": "json",
-                   "id": vehicle_id}).json()
+                    "format": "json",
+                    "id": vehicle_id}).json()
         return v["stops"]["stop"]
     except (KeyError, json.decoder.JSONDecodeError):
         return []  # error?
@@ -128,7 +128,7 @@ def cli(context, station, destination, vehicle_filter, continuous):
             if destination and not any(direction.lower().startswith(d.lower()) for d in destination):
                 continue
 
-            vehicle_filter_passed, arrival_time = vehicle_filter_check(train["vehicle"], station_name, vehicle_filter) 
+            vehicle_filter_passed, arrival_time = vehicle_filter_check(train["vehicle"], station_name, vehicle_filter)
 
             if not vehicle_filter_passed:
                 continue
@@ -139,7 +139,7 @@ def cli(context, station, destination, vehicle_filter, continuous):
 
             if cancelled:
                 message = click.style('\u0336'.join(message) + '-' + '\u0336', fg="red", blink=True)
-            
+
             click.echo(message)
             count += 1
             if count >= context.terminal_height - 2:
