@@ -11,9 +11,11 @@ setup(name='irail-cli',
       description='CLI to the iRail API',
       long_description="""
       Options:
-      - Liveboard
-      - Itinerary
-      - Vehicle (planned)
+
+        - Liveboard
+        - Itinerary
+        - Vehicle (planned)
+      
       VERY BUGGY AT THE MOMENT!
       """,
       url='http://github.com/Ben-Baert/iRail',
