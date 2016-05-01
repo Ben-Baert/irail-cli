@@ -82,7 +82,7 @@ def make_route_header(context, from_station, to_station):
 
 
 def route_overview(connection):
-    return (get_departure_time(connection), 
+    return (get_departure_time(connection),
             get_arrival_time(connection),
             get_duration(connection),
             str(get_nr_of_vias(connection)))
@@ -104,7 +104,7 @@ def show_route_choices(connections):
         click.echo(msg)
 
 
-def get_connections(from_station, to_station, time=None, date=None, time_preference="depart", format="json", fast=True):
+def get_connections(from_station, to_station, time=None, date=None, time_preference="depart"):  # , format="json", fast=True
     params = {"from": from_station,
               "to": to_station,
               "time": time,

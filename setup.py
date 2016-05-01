@@ -15,7 +15,7 @@ setup(name='irail-cli',
         - Liveboard
         - Itinerary
         - Vehicle (planned)
-      
+
       VERY BUGGY AT THE MOMENT!
       """,
       url='http://github.com/Ben-Baert/iRail',
@@ -24,7 +24,7 @@ setup(name='irail-cli',
           'Programming Language :: Python :: 2.7',
           'Programming Language :: Python :: 3.5',
           'License :: OSI Approved :: MIT License',
-          'Topic :: Utilities'], 
+          'Topic :: Utilities'],
       author='Ben Baert',
       author_email='benbaert@tuta.io',
       license='MIT',
@@ -38,4 +38,3 @@ setup(name='irail-cli',
               irail=irail.cli:cli
               ''',
       zip_safe=False)
-

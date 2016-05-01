@@ -15,7 +15,8 @@ pass_context = click.make_pass_decorator(Context, ensure=True)
 
 
 class ComplexCLI(click.MultiCommand):
-    def list_commands(self, ctx):
+    @staticmethod
+    def list_commands(ctx):
         rv = []
         for filename in os.listdir(commands_folder):
             if filename.endswith('.py') and \
@@ -24,7 +25,8 @@ class ComplexCLI(click.MultiCommand):
         rv.sort()
         return rv
 
-    def get_command(self, ctx, name):
+    @staticmethod
+    def get_command(ctx, name):
         try:
             if sys.version_info[0] == 2:
                 name = name.encode('ascii', 'replace')
