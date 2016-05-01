@@ -7,6 +7,15 @@ class NoConnectionsFound(Exception):
     pass
 
 
+def parse_duration(duration):
+    hours, minutes = divmod(int(duration), 3600)
+    return str(hours) + ":" + str(minutes)[:-2].rjust(2, "0")
+
+
+def get_duration(connection):
+    return parse_duration(connection["duration"])
+
+
 def get_nr_of_vias(connection):
     try:
         return int(connection["vias"]["number"])
@@ -77,8 +86,8 @@ def expand_connection(context, connection):
     if "vias" in connection:
         for via in connection["vias"]["via"]:
             expand_via(context, via)
-    arrival_vehicle_string = generate_vehicle_string(arrival_info)
-    click.secho(arrival_vehicle_string.center(context.terminal_width), reverse = True)
+        arrival_vehicle_string = generate_vehicle_string(arrival_info)
+        click.secho(arrival_vehicle_string.center(context.terminal_width), reverse = True)
     click.echo(arrival_station + (arrival_time + " " + arrival_platform + empty_slot).rjust(context.terminal_width - len(arrival_station)))
 
 
