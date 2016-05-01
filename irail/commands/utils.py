@@ -68,9 +68,10 @@ def parse_platform(platform, platform_changed):
     If platform has been changed, apply 'reverse' style.
     """
     platform_changed = platform_changed != "1"
-    platform_message = " " + platform.rjust(2)
-    if platform_changed:
-        return click.style(platform_message, reverse=True)
+    if not platform_changed:
+        platform_message = " " + platform.rjust(2)
+    else:
+        platform_message = " " + click.style(platform_message, reverse=True)
     return platform_message
 
 
