@@ -16,11 +16,15 @@ Planned: Version 0.1.0 2016-05-10
   - Write tests for liveboard
   - Write tests for route
 
-Planned: Version 0.0.2 2016-05-05
+Planned: Version 0.0.4 2016-05-05
 ---------------------------------
   - Cleanup route
 
-Version 0.0.2 2016-05-02
+Version 0.0.3 2016-05-01
+------------------------
+  - Lots of minor route bug fixes
+
+Version 0.0.2 2016-05-01
 ------------------------
   - Fix Python 2 compatibility
 
