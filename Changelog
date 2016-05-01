@@ -21,10 +21,22 @@ Planned: Version 0.1.0 2016-05-10
   - Write tests for liveboard
   - Write tests for route
 
-Planned: Version 0.0.5 2016-05-05
+Planned: Version 0.0.8 2016-05-05
 ---------------------------------
   - Cleanup route
   - Fix bug with changed platforms
+
+Version 0.0.7 2016-05-01
+------------------------
+  - Fixes styling of cancelled train in liveboard
+
+Version 0.0.6 2016-05-01
+------------------------
+  - Various minor bug fixes
+
+Version 0.0.5 2016-05-01
+------------------------
+  - Fixes styling of changed platform in liveboard
 
 Version 0.0.4 2016-05-01
 ------------------------
