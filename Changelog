@@ -13,11 +13,11 @@ Planned: Version 0.0.3 2016-05-10
 ---------------------------------
   - Write tests for vehicle
   - Expose vehicle
+  - Write tests for liveboard
+  - Write tests for route
 
 Planned: Version 0.0.2 2016-05-05
 ---------------------------------
-  - Write tests for liveboard
-  - Write tests for route
   - Cleanup route
 
 Version 0.0.1 2016-05-01
