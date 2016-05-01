@@ -8,6 +8,7 @@ from irail.commands.utils import *
 def get_direction(connection):
     return connection["stationinfo"]["name"]
 
+
 def get_platform(connection):
     return connection["platforminfo"]["name"], not(bool(connection["platforminfo"]["normal"]))
 
@@ -146,11 +147,13 @@ def cli(context, station, destination, vehicle_filter, continuous):
             message = (normal_departure_time +
                        (" - " + arrival_time if arrival_time else "") +
                        " " + delay + " " + type_of_train + " " + direction +
-                       " " * (context.terminal_width - len(platform) - len(direction) - 13) +
-                       click.style(platform, reverse=(True if platform_changed else False)))
+                       " " * (context.terminal_width - len(platform) - len(direction) - 13))
 
             if cancelled:
-                message = click.style(u'\u0336'.join(message) + '-' + u'\u0336', fg="red", blink=True)
+                message += platform
+                message = click.style(u'\u0336'.join(message), fg="red", blink=True)
+            else:
+                message += click.style(platform, reverse=(True if platform_changed else False))
 
             click.echo(message)
             count += 1
