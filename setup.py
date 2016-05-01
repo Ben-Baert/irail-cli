@@ -7,7 +7,7 @@ def readme():
 
 
 setup(name='irail',
-      version='0.0.2',
+      version='0.0.3',
       description='CLI to the iRail API',
       long_description="""
       Options:
@@ -15,12 +15,10 @@ setup(name='irail',
         - Liveboard
         - Itinerary
         - Vehicle (planned)
-
-      VERY BUGGY AT THE MOMENT!
       """,
       url='http://github.com/Ben-Baert/iRail',
       classifiers=[
-          'Development Status :: 2 - Pre-Alpha',
+          'Development Status :: 3 - Alpha'
           'Programming Language :: Python :: 2.7',
           'Programming Language :: Python :: 3.5',
           'License :: OSI Approved :: MIT License',
