@@ -104,11 +104,11 @@ def show_route_choices(connections):
         click.echo(msg)
 
 
-def get_connections(from_station, to_station, time_input=None, date_input=None, time_preference="depart", format="json", fast=True):
+def get_connections(from_station, to_station, time=None, date=None, time_preference="depart", format="json", fast=True):
     params = {"from": from_station,
               "to": to_station,
-              "time": time_input,
-              "date": date_input,
+              "time": time,
+              "date": date,
               "timeSel": time_preference,
               "format": "json",
               "fast": "true"}

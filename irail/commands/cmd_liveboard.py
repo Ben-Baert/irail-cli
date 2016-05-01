@@ -133,7 +133,7 @@ def cli(context, station, destination, vehicle_filter, continuous):
 
             message = (normal_departure_time +
                        (" - " + arrival_time if arrival_time else "") +
-                       " " + delay + " " + type_of_train + " " + direction + platform)
+                       " " + delay + " " + type_of_train + " " + direction + platform.rjust(context.terminal_width - len(direction) - 13))
 
             if cancelled:
                 message = click.style('\u0336'.join(message) + '-' + '\u0336', fg="red", blink=True)
