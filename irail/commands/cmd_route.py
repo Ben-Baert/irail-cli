@@ -66,14 +66,14 @@ def expand_connection(context, connection):
     departure_info = connection["departure"]
     departure_station = departure_info["stationinfo"]["standardname"]
     departure_time = parse_time(departure_info["time"])
-    departure_vehicle = parse_vehicle(departure_info["vehicle"])
+    departure_vehicle = parse_vehicle_type(departure_info["vehicle"])
     departure_platform = get_platform(departure_info)
     departure_direction = departure_info["direction"]["name"]
 
     arrival_info = connection["arrival"]
     arrival_station = arrival_info["stationinfo"]["standardname"]
     arrival_time = parse_time(arrival_info["time"])
-    arrival_vehicle = parse_vehicle(arrival_info["vehicle"])
+    arrival_vehicle = parse_vehicle_type(arrival_info["vehicle"])
     arrival_platform = get_platform(arrival_info)
     arrival_direction = arrival_info["direction"]["name"]
 

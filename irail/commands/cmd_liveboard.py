@@ -1,7 +1,6 @@
 import click
 import requests
 from time import sleep
-import json
 from irail.cli import pass_context
 from irail.commands.utils import *
 
@@ -26,7 +25,7 @@ def get_vehicle_stops(vehicle_id):
                     "format": "json",
                     "id": vehicle_id}).json()
         return v["stops"]["stop"]
-    except (KeyError, json.decoder.JSONDecodeError):
+    except (KeyError, ValueError):
         return []  # error?
 
 
@@ -96,6 +95,14 @@ def cli(context, station, destination, vehicle_filter, continuous):
     based on destination.
     Example:
     irail liveboard Gent-Sint-Pieters --destination-filter Oostende
+    or shorthand:
+    irail liveboard Gent-Sint-Pieters -d Oostende
+
+    You can select multiple destination-filters. If the train
+    goes to any of the destinations, it will be shown on the liveboard.
+    Example (all trains going to the beach):
+    irail liveboard Gent-Sint-Pieters -d Oostende -d Blankenberge -d Knokke -d "De Panne"
+    (note the "" for arguments with spaces in them)
 
     You can also use a more comprehensive check
     that checks every station on a vehicle's path,

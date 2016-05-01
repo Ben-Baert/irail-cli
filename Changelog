@@ -21,10 +21,14 @@ Planned: Version 0.1.0 2016-05-10
   - Write tests for liveboard
   - Write tests for route
 
-Planned: Version 0.0.4 2016-05-05
+Planned: Version 0.0.5 2016-05-05
 ---------------------------------
   - Cleanup route
   - Fix bug with changed platforms
+
+Version 0.0.4 2016-05-01
+------------------------
+  - Temporary bug fix for changed platforms(ugly)
 
 Version 0.0.3 2016-05-01
 ------------------------

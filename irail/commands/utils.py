@@ -40,7 +40,7 @@ def get_departure_platform(via):
 
 
 def get_vehicle(connection):
-    return parse_vehicle(connection["vehicle"])
+    return parse_vehicle_type(connection["vehicle"])
 
 
 def parse_time(timestamp, include_date=False):
@@ -70,7 +70,7 @@ def parse_platform(platform, platform_changed):
 def get_styled_platform(platform, platform_changed):
     pass
 
-def parse_vehicle(vehicle):
+def parse_vehicle_type(vehicle):
     """
     Takes a vehicle string (BE.NMBS.IC504)
     and returns a human-readable
