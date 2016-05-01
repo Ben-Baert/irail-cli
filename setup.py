@@ -18,7 +18,7 @@ setup(name='irail',
       """,
       url='http://github.com/Ben-Baert/iRail',
       classifiers=[
-          'Development Status :: 3 - Alpha'
+          'Development Status :: 3 - Alpha',
           'Programming Language :: Python :: 2.7',
           'Programming Language :: Python :: 3.5',
           'License :: OSI Approved :: MIT License',
