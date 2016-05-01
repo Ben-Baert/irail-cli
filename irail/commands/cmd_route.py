@@ -30,8 +30,18 @@ def expand_via(context, via):
     vehicle = get_vehicle(via)
     direction = get_direction(via)
 
-    click.secho(str.center('\u2193 ' + vehicle + " (" + direction + ") \u2193", context.terminal_width), reverse = True) if via["id"] != "0" else False
-    click.echo(station_name +  (arrival_time + " " + arrival_platform + " | " + departure_time + " "  + departure_platform).rjust(context.terminal_width - len(station_name)))
+    vehicle_string = '\u2193 ' + vehicle + " (" + direction + ") \u2193"
+    centered_vehicle_string = str.center(vehicle_string, context.terminal_width)
+
+    station_string = ""
+
+    if via["id"] != "0":
+        click.secho(centered_vehicle_string, reverse=True)
+
+    arrival_string = arrival_time + " " + arrival_platform
+    departure_string = departure_time + " "  + departure_platform
+
+    click.echo(station_name +  (arrival_string + " | " + departure_string).rjust(context.terminal_width - len(station_name)))
 
 
 def expand_connection(context, connection):
