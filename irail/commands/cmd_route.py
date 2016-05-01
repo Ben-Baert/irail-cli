@@ -136,6 +136,7 @@ def get_connections(from_station, to_station, time=None, date=None, time_prefere
     except KeyError:
         raise NoConnectionsFound
 
+
 def verify_date(date):
     if not date:
         return True
@@ -146,9 +147,10 @@ def verify_date(date):
 
     day_is_acceptable = int(r.group(1)) in range(1, 32)
     month_is_acceptable = int(r.group(2)) in range(1, 13)
-    year_is_acceptable = int(r.group(3)) in (datetime.now().year - i for i in (-1, 0, 1))
+    year_is_acceptable = int(r.group(3)) in (datetime.now().year % 100 - i for i in (-1, 0, 1))
 
     return day_is_acceptable and month_is_acceptable and year_is_acceptable
+
 
 def verify_time(time):
     if not time:
@@ -162,6 +164,19 @@ def verify_time(time):
     minutes_is_acceptable = int(r.group(2)) in range(0, 60)
 
     return hour_is_acceptable and minutes_is_acceptable
+
+
+def asap_sort(connection):
+    return connection["arrival"]["time"]
+
+
+def reasonable_connection(connection):
+    return int(connection["arrival"]["time"]) + int(connection["duration"]) // 2
+
+
+def sort_connections(connections):
+    return sorted(connections, key=reasonable_connection)
+
 
 
 @click.command()
@@ -188,9 +203,7 @@ def cli(context, from_station, to_station, time, date, selection):
 
     connections = get_connections(from_station, to_station, time, date, selection)
 
-    optimal_connections = sorted(connections,
-                                 key=lambda x: int(x["arrival"]["time"]) +
-                                                   int(x["duration"]) // 2)
+    optimal_connections = sort_connections(connections)
     most_optimal_connection = optimal_connections.pop(0)
     optimal_departure_time, optimal_arrival_time, duration, changes = route_overview(most_optimal_connection)
     click.secho("Optimal connection: " + optimal_departure_time + " --> " + optimal_arrival_time + ("Duration: " + duration + " " + "Changes: " + changes).rjust(context.terminal_width - 35), reverse = True, nl = False)
