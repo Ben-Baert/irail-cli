@@ -9,6 +9,49 @@ Utilities used in at least 2 of the 3
 features go here.
 """
 
+
+def parse_duration(duration):
+    hours, minutes = divmod(int(duration), 3600)
+    return str(hours) + ":" + str(minutes)[:-2].rjust(2, "0")
+
+
+def get_duration(connection):
+    return parse_duration(connection["duration"])
+
+
+def get_station_name(connection):
+    return connection["stationinfo"]["standardname"]
+
+
+def get_time(connection):
+    return parse_time(connection["time"])
+
+
+def get_platform(connection):
+    return parse_platform(connection["platforminfo"]["name"],
+                          connection["platforminfo"]["normal"])
+
+
+def get_arrival_time(via):
+    return parse_time(via["arrival"]["time"])
+
+
+def get_arrival_platform(via):
+    return get_platform(via["arrival"])
+
+
+def get_departure_time(via):
+    return parse_time(via["departure"]["time"])
+
+
+def get_departure_platform(via):
+    return get_platform(via["departure"])
+
+
+def get_vehicle(connection):
+    return parse_vehicle(connection["vehicle"])
+
+
 def parse_time(timestamp):
     """
     Takes a timestamp, returns
@@ -30,14 +73,15 @@ def parse_platform(platform, platform_changed):
         return click.style(platform_message, reverse=True)
     return platform_message
 
+
 def parse_vehicle(vehicle):
     """
-    Takes a vehicle string (BE.NMBS.IC.)
+    Takes a vehicle string (BE.NMBS.IC504)
     and returns a human-readable
-    version (e.g. IC, L)
+    version of its type (e.g. IC, L)
     """
     return (''.join(x for x in vehicle[8:10]
-                    if x in "PLIC")
+                    if x in "PLICS")
               .ljust(2))
 
 
@@ -105,6 +149,9 @@ def get_station(suggestion):
 
     return suggestions[station_index]["name"]
 
+
+def get_delay(connection):
+    return parse_delay(connection["delay"])
 
 def parse_delay(delay_str):
     if delay_str == "0":

@@ -5,6 +5,9 @@ from irail.cli import pass_context
 from time import sleep
 import json
 
+def get_direction(connection):
+    return connection["stationinfo"]["name"]
+
 
 def is_match(stop, arrival_station):
     return stop.lower().startswith(arrival_station.lower())
@@ -24,6 +27,7 @@ def get_vehicle_stops(vehicle_id):
         return v["stops"]["stop"]
     except (KeyError, json.decoder.JSONDecodeError):
         return []  # error?
+
 
 def vehicle_filter_check(vehicle_id, departure_station_name, arrival_station_name):
     """
@@ -48,7 +52,7 @@ def vehicle_filter_check(vehicle_id, departure_station_name, arrival_station_nam
             arrival_time = parse_time(stop["time"])
             return True, arrival_time
     return False, None
-    
+
 
 def make_station_header(json_object, destination_filter, vehicle_filter, context):
     """
@@ -78,22 +82,22 @@ def cli(context, station, destination, vehicle_filter, continuous):
     """
     Show the upcoming trains for a certain trainstation.
     Very similar to what you would see on the screen
-    in the station. 
-    Example: 
+    in the station.
+    Example:
     irail liveboard Gent-Sint-Pieters
 
     You can choose to refresh the livebaord
     every 60 seconds with the -c flag.
     Example:
     irail liveboard Gent-Sint-Pieters -c
-    
+
     Additionally, you can filter the results
     based on destination.
-    Example: 
+    Example:
     irail liveboard Gent-Sint-Pieters --destination-filter Oostende
-    
+
     You can also use a more comprehensive check
-    that checks every station on a vehicle's path, 
+    that checks every station on a vehicle's path,
     but this is very slow and generally not recommended.
     In most cases you're better off using the route command.
     Example:
@@ -112,11 +116,11 @@ def cli(context, station, destination, vehicle_filter, continuous):
         trains = safe_trains_extract(r)
 
         for train in trains:
-            type_of_train = parse_vehicle(train["vehicle"])
-            normal_departure_time = parse_time(train["time"])
-            cancelled, delay = parse_delay(train["delay"])
-            platform = parse_platform(train["platform"], train["platforminfo"]["normal"])            
-            direction = parse_direction(train["station"])
+            type_of_train = get_vehicle(train)
+            normal_departure_time = get_time(train)
+            cancelled, delay = get_delay(train)
+            platform = get_platform(train)
+            direction = get_direction(train)
 
             if destination and not any(direction.lower().startswith(d.lower()) for d in destination):
                 continue

@@ -1,9 +1,19 @@
+Planned: Version 0.0.4 2016-05-15
+---------------------------------
+  - Code cleanup
+    - Make helper functions take json argument
+  - Increase test coverage
+  - Various bug fixes
+Planned: Version 0.0.3 2016-05-10
+---------------------------------
+  - Write tests for vehicle
+  - Expose vehicle
 Planned: Version 0.0.2 2016-05-05
+---------------------------------
   - Write tests for liveboard
   - Write tests for route
-  - Write tests for vehicle
+  - Cleanup route
 Planned: Version 0.0.1 2016-05-01
 ---------------------------------
   - Expose liveboard
   - Expose route
-  - Expose vehicle
