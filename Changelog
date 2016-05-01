@@ -2,12 +2,17 @@ Planned: Version 0.1.2 2016-05-20
 ---------------------------------
   - Add extensive documentation
 
-Planned: Version 0.1.1 2016-05-15
+Planned: Version 0.2.0 2016-05-15
 ---------------------------------
   - Code cleanup
     - Make helper functions take json argument
   - Increase test coverage
   - Various bug fixes
+  - Store preferences
+    - Station shortcuts (e.g. Gent-Sint-Pieters -> GSP)
+    - Route shortcuts (e.g. if route is called with no arguments; look for
+    favorite routes)
+    
 
 Planned: Version 0.1.0 2016-05-10
 ---------------------------------
@@ -19,6 +24,7 @@ Planned: Version 0.1.0 2016-05-10
 Planned: Version 0.0.4 2016-05-05
 ---------------------------------
   - Cleanup route
+  - Fix bug with changed platforms
 
 Version 0.0.3 2016-05-01
 ------------------------

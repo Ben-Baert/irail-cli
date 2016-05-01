@@ -43,13 +43,13 @@ def get_vehicle(connection):
     return parse_vehicle(connection["vehicle"])
 
 
-def parse_time(timestamp):
+def parse_time(timestamp, include_date=False):
     """
     Takes a timestamp, returns
     a human-readable (HH:MM)
     time string.
     """
-    return datetime.fromtimestamp(int(timestamp)).strftime("%H:%M")
+    return datetime.fromtimestamp(int(timestamp)).strftime("%H:%M (%d/%m/%Y)" if include_date else "%H:%M")
 
 
 def parse_platform(platform, platform_changed):
@@ -59,12 +59,16 @@ def parse_platform(platform, platform_changed):
     If platform has been changed, apply 'reverse' style.
     """
     platform_changed = platform_changed != "1"
+    platform_message = " " * (3 - len(platform))
     if not platform_changed:
-        platform_message = " " + platform.rjust(2)
+        platform_message += platform
     else:
-        platform_message = " " + click.style(platform_message, reverse=True)
+        platform_message += click.style(platform, reverse=True)
     return platform_message
 
+
+def get_styled_platform(platform, platform_changed):
+    pass
 
 def parse_vehicle(vehicle):
     """
@@ -106,11 +110,7 @@ def get_station(suggestion):
                         headers=headers)
                         .json())
     except ValueError:
-        click.echo(
-                """
-                The API doesn't seem to respond properly.
-                Please try again later!
-                """)
+        click.echo("The api doesn't seem to be working properly.")
         raise SystemExit(0)
     except requests.exceptions.ConnectionError:
         try:
@@ -139,6 +139,7 @@ def get_station(suggestion):
 
 def get_delay(connection):
     return parse_delay(connection["delay"])
+
 
 def parse_delay(delay_str):
     if delay_str == "0":
