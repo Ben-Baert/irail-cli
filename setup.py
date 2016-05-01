@@ -6,8 +6,8 @@ def readme():
         return f.read()
 
 
-setup(name='irail-cli',
-      version='0.0.1',
+setup(name='irail',
+      version='0.0.2',
       description='CLI to the iRail API',
       long_description="""
       Options:

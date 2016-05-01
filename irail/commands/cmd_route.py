@@ -17,6 +17,11 @@ def get_nr_of_vias(connection):
 def get_direction(connection):
     return connection["direction"]["name"]
 
+def generate_vehicle_string(connection):
+    vehicle = get_vehicle(connection)
+    direction = get_direction(connection)
+
+    return u'\u2193 ' + vehicle + " (" + direction + ") " + u'\u2193'
 
 def expand_via(context, via):
     station_name = get_station_name(via)
@@ -30,8 +35,8 @@ def expand_via(context, via):
     vehicle = get_vehicle(via)
     direction = get_direction(via)
 
-    vehicle_string = '\u2193 ' + vehicle + " (" + direction + ") \u2193"
-    centered_vehicle_string = str.center(vehicle_string, context.terminal_width)
+    vehicle_string = generate_vehicle_string(via)
+    centered_vehicle_string = vehicle_string.center(context.terminal_width)
 
     station_string = ""
 
@@ -67,17 +72,20 @@ def expand_connection(context, connection):
     nr_of_vias = get_nr_of_vias(connection)
 
     click.echo(departure_station + (departure_time + " "  + departure_platform).rjust(context.terminal_width - len(departure_station)))
-    click.secho(str.center('\u2193 ' + departure_vehicle + " (" + departure_direction + ") \u2193", context.terminal_width), reverse = True)
+    departure_vehicle_string = generate_vehicle_string(departure_info)
+    click.secho(departure_vehicle_string.center(context.terminal_width), reverse=True)
     if "vias" in connection:
         for via in connection["vias"]["via"]:
             expand_via(context, via)
-    click.secho(str.center('\u2193 ' + arrival_vehicle + " (" + arrival_direction + ") \u2193", context.terminal_width), reverse = True)
+    arrival_vehicle_string = generate_vehicle_string(arrival_info)
+    click.secho(arrival_vehicle_string.center(context.terminal_width), reverse = True)
     click.echo(arrival_station + (arrival_time + " " + arrival_platform + empty_slot).rjust(context.terminal_width - len(arrival_station)))
 
 
 def make_route_header(context, from_station, to_station):
     click.secho(" " * context.terminal_width, reverse=True)
-    click.secho(str.center(from_station + " - " + to_station, context.terminal_width), reverse=True)
+    route_string = from_station + " - " + to_station
+    click.secho(route_string.center(context.terminal_width), reverse=True)
     click.secho(" " * context.terminal_width, reverse=True)
 
 

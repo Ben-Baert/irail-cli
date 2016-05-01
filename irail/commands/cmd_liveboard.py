@@ -50,7 +50,7 @@ def vehicle_filter_check(vehicle_id, departure_station_name, arrival_station_nam
         if stop_name == departure_station_name:
             departure_station_passed = True
         if departure_station_passed and is_match(stop["station"], arrival_station_name):
-            arrival_time = parse_time(stop["time"])
+            arrival_time = parse_time(stop_time)
             return True, arrival_time
     return False, None
 
@@ -65,7 +65,7 @@ def make_station_header(json_object, destination_filter, vehicle_filter, context
     direction = destination_filter or vehicle_filter or "all"
     title = name + " (direction: " + direction + ")"
     click.secho(station_time + " " +
-                str.center(title, context.terminal_width - 6),
+                title.center(context.terminal_width - 6),
                 reverse=True)
     return name
 

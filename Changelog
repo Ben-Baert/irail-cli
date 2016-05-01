@@ -20,6 +20,10 @@ Planned: Version 0.0.2 2016-05-05
 ---------------------------------
   - Cleanup route
 
+Version 0.0.2 2016-05-02
+------------------------
+  - Fix Python 2 compatibility
+
 Version 0.0.1 2016-05-01
 ---------------------------------
   - Expose liveboard
