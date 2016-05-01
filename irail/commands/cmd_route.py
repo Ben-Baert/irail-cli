@@ -147,7 +147,7 @@ def cli(context, from_station, to_station, time, date, selection):
                                                    int(x["duration"]) // 2)
     most_optimal_connection = optimal_connections.pop(0)
     optimal_departure_time, optimal_arrival_time, duration, changes = route_overview(most_optimal_connection)
-    click.secho("Optimal connection: " + optimal_departure_time + " --> " + optimal_arrival_time + ("Duration: " + duration + " " + "Changes: " + changes).rjust(context.terminal_width - 33), reverse = True, nl = False)
+    click.secho("Optimal connection: " + optimal_departure_time + " --> " + optimal_arrival_time + ("Duration: " + duration + " " + "Changes: " + changes).rjust(context.terminal_width - 35), reverse = True, nl = False)
     expand_connection(context, most_optimal_connection)
 
     click.echo("Other options:")
