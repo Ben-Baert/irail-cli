@@ -116,6 +116,8 @@ def cli(context, station, destination, vehicle_filter, continuous):
 
         trains = safe_trains_extract(r)
 
+        count = 0
+
         for train in trains:
             type_of_train = get_vehicle(train)
             normal_departure_time = get_time(train)
@@ -139,6 +141,9 @@ def cli(context, station, destination, vehicle_filter, continuous):
                 message = click.style('\u0336'.join(message) + '-' + '\u0336', fg="red", blink=True)
             
             click.echo(message)
+            count += 1
+            if count >= context.terminal_height - 2:
+                break
 
         if not continuous:
             break
