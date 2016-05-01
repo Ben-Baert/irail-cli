@@ -1,4 +1,5 @@
 import click
+import re
 from irail.cli import pass_context
 from irail.commands.utils import *
 
@@ -135,6 +136,33 @@ def get_connections(from_station, to_station, time=None, date=None, time_prefere
     except KeyError:
         raise NoConnectionsFound
 
+def verify_date(date):
+    if not date:
+        return True
+
+    r = re.match(r'^(\d{2})(\d{2})(\d{2})$', date)
+    if not r:
+        return False
+
+    day_is_acceptable = int(r.group(1)) in range(1, 32)
+    month_is_acceptable = int(r.group(2)) in range(1, 13)
+    year_is_acceptable = int(r.group(3)) in (datetime.now().year - i for i in (-1, 0, 1))
+
+    return day_is_acceptable and month_is_acceptable and year_is_acceptable
+
+def verify_time(time):
+    if not time:
+        return True
+
+    r = re.match(r'^(\d{2})(\d{2})$', time)
+    if not r:
+        return False
+
+    hour_is_acceptable = int(r.group(1)) in range(0, 24)
+    minutes_is_acceptable = int(r.group(2)) in range(0, 60)
+
+    return hour_is_acceptable and minutes_is_acceptable
+
 
 @click.command()
 @click.argument('from_station')
@@ -147,6 +175,12 @@ def get_connections(from_station, to_station, time=None, date=None, time_prefere
               help="Choose 'depart' or 'arrive' at specified date/time. Defaults to 'depart'")
 @pass_context
 def cli(context, from_station, to_station, time, date, selection):
+    if not verify_date(date):
+        click.echo("Date is not properly formatted (DDMMYY)")
+        raise SystemExit(0)
+    if not verify_time(time):
+        click.echo("Time is not properly formatted (HHMM)")
+        raise SystemExit(0)
     from_station = get_station(from_station)
     to_station = get_station(to_station)
 
