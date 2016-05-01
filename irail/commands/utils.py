@@ -132,7 +132,7 @@ def get_station(suggestion):
 
     if len(suggestions) == 1:
         station_index = 0
-            
+
     elif len(suggestions) == 0:
         click.echo(
             """
@@ -145,8 +145,7 @@ def get_station(suggestion):
     else:
         for index, station in enumerate(suggestions):
             click.echo(str(index) + ": " + station["name"])
-        station_index = click.prompt("Which station do you mean by {0}?".format(suggestion),
-                            type=int)
+        station_index = click.prompt("Which station do you mean by {0}?".format(suggestion), type=int)
 
     return suggestions[station_index]["name"]
 
