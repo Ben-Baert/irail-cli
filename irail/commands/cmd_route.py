@@ -9,7 +9,7 @@ class NoConnectionsFound(Exception):
 
 def parse_duration(duration):
     hours, minutes = divmod(int(duration), 3600)
-    return str(hours) + ":" + str(minutes).rjust(2, "0")
+    return str(hours) + ":" + str(minutes // 60).rjust(2, "0")
 
 
 def get_duration(connection):
@@ -114,7 +114,7 @@ def show_route_choices(connections):
         arrival_info = connection["arrival"]
         arrival_time = parse_time(arrival_info["time"])
         arrival_platform = arrival_info["platform"]
-        duration = int(connection["duration"]) // 60
+        duration = get_duration(connection)
         nr_of_vias = get_nr_of_vias(connection)
 
         msg = str(index) + ": " + departure_time + " --> " + arrival_time + "             " + str(duration) + "     " +  str(nr_of_vias)
