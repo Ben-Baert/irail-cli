@@ -1,16 +1,17 @@
 import click
-from .utils import *
 from irail.cli import pass_context
+from irail.commands.utils import *
 
 
 class NoConnectionsFound(Exception):
     pass
 
 
-def parse_vias(connection):
-    if "vias" in connection:
+def get_nr_of_vias(connection):
+    try:
         return int(connection["vias"]["number"])
-    return 0 
+    except KeyError:
+        return 0
 
 
 def get_direction(connection):
@@ -33,9 +34,6 @@ def expand_via(context, via):
     click.echo(station_name +  (arrival_time + " " + arrival_platform + " | " + departure_time + " "  + departure_platform).rjust(context.terminal_width - len(station_name)))
 
 
-
-
-
 def expand_connection(context, connection):
     """
     Get rid of duplication
@@ -56,7 +54,7 @@ def expand_connection(context, connection):
 
     empty_slot = " " * 10
     duration = get_duration(connection)
-    nr_of_vias = parse_vias(connection)
+    nr_of_vias = get_nr_of_vias(connection)
 
     click.echo(departure_station + (departure_time + " "  + departure_platform).rjust(context.terminal_width - len(departure_station)))
     click.secho(str.center('\u2193 ' + departure_vehicle + " (" + departure_direction + ") \u2193", context.terminal_width), reverse = True)
@@ -68,16 +66,16 @@ def expand_connection(context, connection):
 
 
 def make_route_header(context, from_station, to_station):
-    click.secho(" " * context.terminal_width, reverse = True)
-    click.secho(str.center(from_station + " - " + to_station, context.terminal_width), reverse =True)
-    click.secho(" " * context.terminal_width, reverse = True)
+    click.secho(" " * context.terminal_width, reverse=True)
+    click.secho(str.center(from_station + " - " + to_station, context.terminal_width), reverse=True)
+    click.secho(" " * context.terminal_width, reverse=True)
 
 
 def route_overview(connection):
     return (get_departure_time(connection), 
             get_arrival_time(connection),
             get_duration(connection),
-            str(parse_vias(connection)))
+            str(get_nr_of_vias(connection)))
 
 
 def show_route_choices(connections):
@@ -90,7 +88,7 @@ def show_route_choices(connections):
         arrival_time = parse_time(arrival_info["time"])
         arrival_platform = arrival_info["platform"]
         duration = int(connection["duration"]) // 60
-        nr_of_vias = parse_vias(connection)
+        nr_of_vias = get_nr_of_vias(connection)
 
         msg = str(index) + ": " + departure_time + " --> " + arrival_time + "             " + str(duration) + "     " +  str(nr_of_vias)
         click.echo(msg)

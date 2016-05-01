@@ -1,9 +1,10 @@
 import click
 import requests
-from .utils import *
-from irail.cli import pass_context 
 from time import sleep
 import json
+from irail.cli import pass_context 
+from irail.commands.utils import *
+
 
 def get_direction(connection):
     return connection["stationinfo"]["name"]
