@@ -18,11 +18,6 @@ def get_time(connection):
     return parse_time(connection["time"])
 
 
-def get_platform(connection):
-    return parse_platform(connection["platforminfo"]["name"],
-                          connection["platforminfo"]["normal"])
-
-
 def get_arrival_time(via):
     return parse_time(via["arrival"]["time"])
 

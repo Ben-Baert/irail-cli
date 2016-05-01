@@ -177,7 +177,9 @@ def reasonable_connection(connection):
 def sort_connections(connections):
     return sorted(connections, key=reasonable_connection)
 
-
+def get_platform(connection):
+    return parse_platform(connection["platforminfo"]["name"],
+                          connection["platforminfo"]["normal"])
 
 @click.command()
 @click.argument('from_station')
