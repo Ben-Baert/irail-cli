@@ -10,15 +10,6 @@ features go here.
 """
 
 
-def parse_duration(duration):
-    hours, minutes = divmod(int(duration), 3600)
-    return str(hours) + ":" + str(minutes)[:-2].rjust(2, "0")
-
-
-def get_duration(connection):
-    return parse_duration(connection["duration"])
-
-
 def get_station_name(connection):
     return connection["stationinfo"]["standardname"]
 
@@ -114,7 +105,7 @@ def get_station(suggestion):
                         {"q": suggestion},
                         headers=headers)
                         .json())
-    except json.decoder.JSONDecodeError:
+    except ValueError:
         click.echo(
                 """
                 The API doesn't seem to respond properly.
@@ -122,25 +113,21 @@ def get_station(suggestion):
                 """)
         raise SystemExit(0)
     except requests.exceptions.ConnectionError:
-        click.echo(
-                """
-                Either the API is down or your internet connection isn't
-                working properly. Please try again later.
-                """)
-        raise SystemExit(0)
+        try:
+            requests.get('http://8.8.8.8/', timeout=1)
+        except requests.exceptions.ConnectionError:
+            click.echo("Your internet connection doesn't seem to be working.")
+            raise SystemExit(0)
+        else:
+            click.echo("The iRail API doesn't seem to be working.")
+            raise SystemExit(0)
     suggestions = json_data["@graph"]
 
     if len(suggestions) == 1:
         station_index = 0
 
     elif len(suggestions) == 0:
-        click.echo(
-            """
-            No station like {0} found.
-            Please verify that you have
-            an existing train station in
-            Belgium and try again.
-            """.format(suggestion))
+        click.echo("No station like {0} found.".format(suggestion))
         raise SystemExit(0)
     else:
         for index, station in enumerate(suggestions):

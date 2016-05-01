@@ -9,7 +9,7 @@ class NoConnectionsFound(Exception):
 
 def parse_duration(duration):
     hours, minutes = divmod(int(duration), 3600)
-    return str(hours) + ":" + str(minutes)[:-2].rjust(2, "0")
+    return str(hours) + ":" + str(minutes).rjust(2, "0")
 
 
 def get_duration(connection):
