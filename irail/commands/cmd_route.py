@@ -34,6 +34,14 @@ def generate_vehicle_string(connection):
 
     return u'\u2193 ' + vehicle + " (" + direction + ") " + u'\u2193'
 
+def get_stops_for_via(via):
+    pass
+
+def get_stops_for_vehicle(vehicle):
+    pass
+
+def show_stop(vehicle_stop):
+    pass
 
 def show_stops(context, via):
     vehicle = via["vehicle"]
