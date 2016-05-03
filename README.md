@@ -1,5 +1,5 @@
-# iRail command line tools
-Some command line tools using the iRail API. It's a bit chaotic at the time, but this should soon be cleaned up.
+# irail command line interface
+Command line interface to the irail api. This allows you to view train information in the console.
 
 - Python3.5 test status: [![Build Status](https://travis-ci.org/Ben-Baert/iRail-command-line-tools.svg?branch=master)](https://travis-ci.org/Ben-Baert/iRail-command-line-tools) 
 
@@ -9,10 +9,15 @@ Some command line tools using the iRail API. It's a bit chaotic at the time, but
 
 - Requirements: [![Requirements Status](https://requires.io/github/Ben-Baert/iRail-command-line-tools/requirements.svg?branch=master)](https://requires.io/github/Ben-Baert/iRail-command-line-tools/requirements/?branch=master)
 
+## Installation
+```
+pip install irail
+```
+
 ## Introduction
 CLI to the iRail API
-Options:
-   - See the liveboard of a train station
-   - Find itineraries between two stations
-   - Track vehicles
+There are three commands:
+   - Liveboard: see the liveboard of a train station (much like what you'd see in an actual train station)
+   - Route: find itineraries between two stations
+   - Vehicle: track a particular vehicle by vehicle id 
 
