@@ -7,7 +7,7 @@ def readme():
 
 
 setup(name='irail',
-      version='0.0.7',
+      version='0.0.8',
       description='CLI to the iRail API',
       long_description="""
       Options:
