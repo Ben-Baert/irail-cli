@@ -114,7 +114,6 @@ def cli(context, station, destination, show_vehicle, continuous):
                 continue
 
             message = (normal_departure_time +
-                       (" - " + arrival_time if arrival_time else "") +
                        " " + delay + " " + type_of_train + " " + direction +
                        " " * (context.terminal_width - len(platform) - len(direction) - 13))
 

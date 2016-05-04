@@ -65,7 +65,7 @@ def parse_platform(platform, platform_changed):
 def get_styled_platform(platform, platform_changed):
     pass
 
-def parse_vehicle_type(vehicle):
+def parse_vehicle_type(vehicle, include_type=True, include_number=True):
     """
     Takes a vehicle string (BE.NMBS.IC504)
     and returns a human-readable
