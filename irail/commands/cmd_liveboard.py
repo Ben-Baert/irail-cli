@@ -104,7 +104,7 @@ def cli(context, station, destination, show_vehicle, continuous):
         count = 0
 
         for train in trains:
-            type_of_train = get_vehicle(train)
+            type_of_train = get_vehicle(train, include_number=show_vehicle)
             normal_departure_time = get_time(train)
             cancelled, delay = get_delay(train)
             platform, platform_changed = get_platform(train)

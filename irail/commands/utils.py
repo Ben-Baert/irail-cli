@@ -2,12 +2,19 @@ import requests
 from datetime import datetime
 import json
 import click
+import re
 
 
 """
 Utilities used in at least 2 of the 3
 features go here.
 """
+
+def api_request():
+    
+
+def station_request(station_name):
+
 
 
 def get_station_name(connection):
@@ -65,15 +72,17 @@ def parse_platform(platform, platform_changed):
 def get_styled_platform(platform, platform_changed):
     pass
 
-def parse_vehicle_type(vehicle, include_type=True, include_number=True):
+
+def parse_vehicle_type(vehicle, include_number=False):
     """
     Takes a vehicle string (BE.NMBS.IC504)
     and returns a human-readable
     version of its type (e.g. IC, L)
     """
-    return (''.join(x for x in vehicle[8:10]
-                    if x in "PLICS")
-              .ljust(2))
+    matches = re.match(r'BE.NMBS.([A-Z]{1,2})(\d{1,4})', vehicle)
+    train_type = matches.group(1)
+    train_number = matches.group(2)
+    return train_type + (train_number if include_number else "")
 
 
 def parse_direction(direction):
