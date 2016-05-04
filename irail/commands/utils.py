@@ -1,4 +1,5 @@
 import requests
+import pytz
 from datetime import datetime
 import json
 import click
@@ -44,7 +45,7 @@ def parse_time(timestamp, include_date=False):
     a human-readable (HH:MM)
     time string.
     """
-    return datetime.fromtimestamp(int(timestamp)).strftime("%H:%M (%d/%m/%Y)" if include_date else "%H:%M")
+    return datetime.fromtimestamp(int(timestamp)).replace(tzinfo=pytz.timezone('Europe/Brussels')).strftime("%H:%M (%d/%m/%Y)" if include_date else "%H:%M")
 
 
 def parse_platform(platform, platform_changed):
