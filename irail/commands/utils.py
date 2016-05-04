@@ -45,7 +45,8 @@ def parse_time(timestamp, include_date=False):
     a human-readable (HH:MM)
     time string.
     """
-    return datetime.fromtimestamp(int(timestamp)).replace(tzinfo=pytz.timezone('Europe/Brussels')).strftime("%H:%M (%d/%m/%Y)" if include_date else "%H:%M")
+    timezone = pytz.timezone('Europe/Brussels')
+    return datetime.fromtimestamp(int(timestamp), timezone).strftime("%H:%M (%d/%m/%Y)" if include_date else "%H:%M")
 
 
 def parse_platform(platform, platform_changed):
