@@ -25,17 +25,7 @@ def api_request(feature, **input_params):
     else:
         url = "http://api.irail.be/{}/".format(feature)
     try:
-        r = requests.get(
-                        url,
-                        params=params,
-                        headers=headers)
-        print(r.url)
-        json_data = (
-                        r.json())
-
-    except ValueError:
-        click.echo("The api doesn't seem to be working properly.")
-        raise SystemExit(0)
+        r = requests.get(url, params=params, headers=headers)
     except requests.exceptions.ConnectionError:
         try:
             requests.get('http://8.8.8.8/', timeout=1)
@@ -45,6 +35,11 @@ def api_request(feature, **input_params):
         else:
             click.echo("The iRail API doesn't seem to be working.")
             raise SystemExit(0)
+    try:
+        json_data = r.json()
+    except ValueError:
+        click.echo("The api doesn't seem to be working properly.")
+        raise SystemExit(0)
     return json_data
 
 
