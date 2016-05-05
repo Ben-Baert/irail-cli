@@ -3,12 +3,66 @@ import pytz
 from datetime import datetime
 import json
 import click
+import re
 
 
 """
 Utilities used in at least 2 of the 3
 features go here.
 """
+
+def api_request(feature, **params):
+    headers = {'Content-type': 'application/json',
+               'Accept': 'text/plain'}
+
+    default_params = {"fast": "true",
+                      "format": "json",
+                       "from": params.get("from_station", None)}  # hack to get around from
+    params = {**default_params, **params}
+
+    if feature == "station":
+        url = "https://irail.be/stations/NMBS"
+    else:
+        url = "http://api.irail.be/{}/".format(feature)
+    try:
+        r = requests.get(
+                        url,
+                        params=params,
+                        headers=headers)
+        print(r.url)
+        json_data = (
+                        r.json())
+
+    except ValueError:
+        click.echo("The api doesn't seem to be working properly.")
+        raise SystemExit(0)
+    except requests.exceptions.ConnectionError:
+        try:
+            requests.get('http://8.8.8.8/', timeout=1)
+        except requests.exceptions.ConnectionError:
+            click.echo("Your internet connection doesn't seem to be working.")
+            raise SystemExit(0)
+        else:
+            click.echo("The iRail API doesn't seem to be working.")
+            raise SystemExit(0)
+    return json_data
+
+
+def station_request(station_name):
+    return api_request("station", q=station_name)
+
+
+def liveboard_request(station_name):
+    return api_request("liveboard", station=station_name)
+
+
+def vehicle_request(vehicle_id):
+    return api_request("vehicle", id=vehicle_id)["stops"]["stop"]
+
+
+def route_request(from_station, to_station, date=None, time=None, time_selection="depart"):
+    return api_request("route", from_station=from_station, to=to_station,
+                       date=date, time=time, timeSel=time_selection)
 
 
 def get_station_name(connection):
@@ -67,15 +121,17 @@ def parse_platform(platform, platform_changed):
 def get_styled_platform(platform, platform_changed):
     pass
 
-def parse_vehicle_type(vehicle):
+
+def parse_vehicle_type(vehicle, include_number=False):
     """
     Takes a vehicle string (BE.NMBS.IC504)
     and returns a human-readable
     version of its type (e.g. IC, L)
     """
-    return (''.join(x for x in vehicle[8:10]
-                    if x in "PLICS")
-              .ljust(2))
+    matches = re.match(r'BE.NMBS.([A-Z]{1,2})(\d{1,4})', vehicle)
+    train_type = matches.group(1)
+    train_number = matches.group(2)
+    return train_type + (train_number if include_number else "")
 
 
 def parse_direction(direction):
@@ -98,26 +154,9 @@ def get_station(suggestion):
     station (e.g. Gent-Sint-Pieters)
     from these possibilities.
     """
-    headers = {'Content-type': 'application/json',
-               'Accept': 'text/plain'}
-    try:
-        json_data = (requests.get(
-                        "https://irail.be/stations/NMBS/",
-                        {"q": suggestion},
-                        headers=headers)
-                        .json())
-    except ValueError:
-        click.echo("The api doesn't seem to be working properly.")
-        raise SystemExit(0)
-    except requests.exceptions.ConnectionError:
-        try:
-            requests.get('http://8.8.8.8/', timeout=1)
-        except requests.exceptions.ConnectionError:
-            click.echo("Your internet connection doesn't seem to be working.")
-            raise SystemExit(0)
-        else:
-            click.echo("The iRail API doesn't seem to be working.")
-            raise SystemExit(0)
+
+    json_data = station_request(suggestion)
+
     suggestions = json_data["@graph"]
 
     if len(suggestions) == 1:

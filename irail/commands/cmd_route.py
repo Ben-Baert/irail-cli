@@ -27,11 +27,26 @@ def get_nr_of_vias(connection):
 def get_direction(connection):
     return connection["direction"]["name"]
 
+
 def generate_vehicle_string(connection):
     vehicle = get_vehicle(connection)
     direction = get_direction(connection)
 
     return u'\u2193 ' + vehicle + " (" + direction + ") " + u'\u2193'
+
+def get_stops_for_via(via):
+    pass
+
+def get_stops_for_vehicle(vehicle):
+    pass
+
+def show_stop(vehicle_stop):
+    pass
+
+def show_stops(context, via):
+    vehicle = via["vehicle"]
+    from_station = ""
+
 
 def expand_via(context, via):
     station_name = get_station_name(via)
