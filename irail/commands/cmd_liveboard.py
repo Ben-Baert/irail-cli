@@ -51,12 +51,14 @@ def make_station_header(json_object, destination_filter, context):
 @click.argument('station')
 @click.option('--destination', '-d', default=None, multiple=True,
               help='Non-comprehensive but efficient filter that only checks the destination of each vehicle')
+@click.option('--train-type', '-t', default=None, multiple=True,
+              help='Filter on train type (e.g. IC, L, S)')
 @click.option('--show-vehicle', '-v', is_flag=True,
               help="Show vehicle ids")
 @click.option('--continuous', '-c', is_flag=True,
               help='Refresh liveboard every 60 seconds',)
 @pass_context
-def cli(context, station, destination, show_vehicle, continuous):
+def cli(context, station, destination, train_type, show_vehicle, continuous):
     """
     Show the upcoming trains for a certain trainstation.
     Very similar to what you would see on the screen
@@ -102,9 +104,10 @@ def cli(context, station, destination, show_vehicle, continuous):
         trains = safe_trains_extract(r)
 
         count = 0
-
         for train in trains:
             type_of_train = get_vehicle(train, include_number=show_vehicle)
+            if train_type and not any(type_of_train.startswith(tt) for tt in train_type):
+                continue
             normal_departure_time = get_time(train)
             cancelled, delay = get_delay(train)
             platform, platform_changed = get_platform(train)
