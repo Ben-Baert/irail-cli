@@ -11,14 +11,14 @@ Utilities used in at least 2 of the 3
 features go here.
 """
 
-def api_request(feature, **params):
+def api_request(feature, **input_params):
     headers = {'Content-type': 'application/json',
                'Accept': 'text/plain'}
 
-    default_params = {"fast": "true",
-                      "format": "json",
-                       "from": params.get("from_station", None)}  # hack to get around from
-    params = {**default_params, **params}
+    params = {"fast": "true",
+              "format": "json",
+              "from": input_params.get("from_station", None)}  # hack to get around from
+    params.update(input_params)
 
     if feature == "station":
         url = "https://irail.be/stations/NMBS"
