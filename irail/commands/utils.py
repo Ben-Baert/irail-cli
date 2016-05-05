@@ -89,8 +89,8 @@ def get_departure_platform(via):
     return get_platform(via["departure"])
 
 
-def get_vehicle(connection):
-    return parse_vehicle_type(connection["vehicle"])
+def get_vehicle(connection, include_number=False):
+    return parse_vehicle_type(connection["vehicle"], include_number)
 
 
 def parse_time(timestamp, include_date=False):
@@ -128,8 +128,11 @@ def parse_vehicle_type(vehicle, include_number=False):
     and returns a human-readable
     version of its type (e.g. IC, L)
     """
-    matches = re.match(r'BE.NMBS.([A-Z]{1,2})(\d{1,4})', vehicle)
-    train_type = matches.group(1)
+    matches = re.match(r'BE.NMBS.([A-Z]{1,3})(\d{1,4})', vehicle)
+    try:
+        train_type = matches.group(1)
+    except:
+        print(vehicle)
     train_number = matches.group(2)
     return train_type + (train_number if include_number else "")
 
