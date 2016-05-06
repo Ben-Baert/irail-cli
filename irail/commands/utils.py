@@ -11,6 +11,9 @@ Utilities used in at least 2 of the 3
 features go here.
 """
 
+class NoConnectionsFound(Exception):
+    pass
+
 def api_request(feature, **input_params):
     headers = {'Content-type': 'application/json',
                'Accept': 'text/plain'}
@@ -27,19 +30,21 @@ def api_request(feature, **input_params):
     try:
         r = requests.get(url, params=params, headers=headers)
     except requests.exceptions.ConnectionError:
+
         try:
             requests.get('http://8.8.8.8/', timeout=1)
         except requests.exceptions.ConnectionError:
             click.echo("Your internet connection doesn't seem to be working.")
-            raise SystemExit(0)
+            raise SystemExit(1)
         else:
             click.echo("The iRail API doesn't seem to be working.")
-            raise SystemExit(0)
+            raise SystemExit(1)
     try:
         json_data = r.json()
     except ValueError:
+        print(r.url)
         click.echo("The api doesn't seem to be working properly.")
-        raise SystemExit(0)
+        raise SystemExit(1)
     return json_data
 
 
@@ -52,13 +57,21 @@ def liveboard_request(station_name):
 
 
 def vehicle_request(vehicle_id):
-    return api_request("vehicle", id=vehicle_id)["stops"]["stop"]
+    return api_request("vehicle", id=vehicle_id)  # ["stops"]["stop"]
 
 
 def route_request(from_station, to_station, date=None, time=None, time_selection="depart"):
-    return api_request("route", from_station=from_station, to=to_station,
+    r = api_request("connections", from_station=from_station, to=to_station,
                        date=date, time=time, timeSel=time_selection)
+    try:
+        return r["connection"]
+    except KeyError:
+        raise NoConnectionsFound
 
+
+def get_platform(connection):
+    return parse_platform(connection["platforminfo"]["name"],
+                          connection["platforminfo"]["normal"])
 
 def get_station_name(connection):
     return connection["stationinfo"]["standardname"]

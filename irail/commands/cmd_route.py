@@ -4,8 +4,7 @@ from irail.cli import pass_context
 from irail.commands.utils import *
 
 
-class NoConnectionsFound(Exception):
-    pass
+
 
 
 def parse_duration(duration):
@@ -28,8 +27,8 @@ def get_direction(connection):
     return connection["direction"]["name"]
 
 
-def generate_vehicle_string(connection):
-    vehicle = get_vehicle(connection)
+def generate_vehicle_string(connection, include_number):
+    vehicle = get_vehicle(connection, include_number=include_number)
     direction = get_direction(connection)
 
     return u'\u2193 ' + vehicle + " (" + direction + ") " + u'\u2193'
@@ -48,7 +47,7 @@ def show_stops(context, via):
     from_station = ""
 
 
-def expand_via(context, via):
+def expand_via(context, via, show_vehicle):
     station_name = get_station_name(via)
 
     arrival_time = get_arrival_time(via)
@@ -60,7 +59,7 @@ def expand_via(context, via):
     vehicle = get_vehicle(via)
     direction = get_direction(via)
 
-    vehicle_string = generate_vehicle_string(via)
+    vehicle_string = generate_vehicle_string(via, include_number=show_vehicle)
     centered_vehicle_string = vehicle_string.center(context.terminal_width)
 
     station_string = ""
@@ -74,7 +73,7 @@ def expand_via(context, via):
     click.echo(station_name +  (arrival_string + " | " + departure_string).rjust(context.terminal_width - len(station_name)))
 
 
-def expand_connection(context, connection):
+def expand_connection(context, connection, show_vehicle):
     """
     Get rid of duplication
     """
@@ -97,12 +96,12 @@ def expand_connection(context, connection):
     nr_of_vias = get_nr_of_vias(connection)
 
     click.echo(departure_station + (departure_time + " "  + departure_platform).rjust(context.terminal_width - len(departure_station)))
-    departure_vehicle_string = generate_vehicle_string(departure_info)
+    departure_vehicle_string = generate_vehicle_string(departure_info, include_number=show_vehicle)
     click.secho(departure_vehicle_string.center(context.terminal_width), reverse=True)
     if "vias" in connection:
         for via in connection["vias"]["via"]:
-            expand_via(context, via)
-        arrival_vehicle_string = generate_vehicle_string(arrival_info)
+            expand_via(context, via, show_vehicle)
+        arrival_vehicle_string = generate_vehicle_string(arrival_info, include_number=show_vehicle)
         click.secho(arrival_vehicle_string.center(context.terminal_width), reverse = True)
     click.echo(arrival_station + (arrival_time + " " + arrival_platform + empty_slot).rjust(context.terminal_width - len(arrival_station)))
 
@@ -135,21 +134,6 @@ def show_route_choices(connections):
 
         msg = str(index) + ": " + departure_time + " --> " + arrival_time + "             " + str(duration) + "     " +  str(nr_of_vias)
         click.echo(msg)
-
-
-def get_connections(from_station, to_station, time=None, date=None, time_preference="depart"):  # , format="json", fast=True
-    params = {"from": from_station,
-              "to": to_station,
-              "time": time,
-              "date": date,
-              "timeSel": time_preference,
-              "format": "json",
-              "fast": "true"}
-    r = requests.get("http://api.irail.be/connections/", params=params).json()
-    try:
-        return r["connection"]
-    except KeyError:
-        raise NoConnectionsFound
 
 
 def verify_date(date):
@@ -192,10 +176,6 @@ def reasonable_connection(connection):
 def sort_connections(connections):
     return sorted(connections, key=reasonable_connection)
 
-def get_platform(connection):
-    return parse_platform(connection["platforminfo"]["name"],
-                          connection["platforminfo"]["normal"])
-
 @click.command()
 @click.argument('from_station')
 @click.argument('to_station')
@@ -205,8 +185,9 @@ def get_platform(connection):
               help="Format: DDMMYY. Defaults to current date")
 @click.option('--selection', '-s', default='depart', type=click.Choice(['depart', 'arrive']),
               help="Choose 'depart' or 'arrive' at specified date/time. Defaults to 'depart'")
+@click.option('--show-vehicle', '-v', default=False, is_flag=True)
 @pass_context
-def cli(context, from_station, to_station, time, date, selection):
+def cli(context, from_station, to_station, time, date, selection, show_vehicle):
     if not verify_date(date):
         click.echo("Date is not properly formatted (DDMMYY)")
         raise SystemExit(0)
@@ -218,13 +199,13 @@ def cli(context, from_station, to_station, time, date, selection):
 
     make_route_header(context, from_station, to_station)
 
-    connections = get_connections(from_station, to_station, time, date, selection)
+    connections = route_request(from_station, to_station, date, time, time_preference)
 
     optimal_connections = sort_connections(connections)
     most_optimal_connection = optimal_connections.pop(0)
     optimal_departure_time, optimal_arrival_time, duration, changes = route_overview(most_optimal_connection)
     click.secho("Optimal connection: " + optimal_departure_time + " --> " + optimal_arrival_time + ("Duration: " + duration + " " + "Changes: " + changes).rjust(context.terminal_width - 35), reverse = True, nl = False)
-    expand_connection(context, most_optimal_connection)
+    expand_connection(context, most_optimal_connection, show_vehicle=show_vehicle)
 
     click.echo("Other options:")
     show_route_choices(optimal_connections)
@@ -234,10 +215,10 @@ def cli(context, from_station, to_station, time, date, selection):
         e = click.prompt("Which one (type 9 for all)?", type=int)
         if e == 9:
             for connection in optimal_connections:
-                expand_connection(context, connection)
+                expand_connection(context, connection, show_vehicle=show_vehicle)
             raise SystemExit(0)
         current = optimal_connections.pop(e)
-        expand_connection(context, current)
+        expand_connection(context, current, show_vehicle=show_vehicle)
         show_route_choices(optimal_connections)
         if optimal_connections:
             v = click.confirm('Would you like to expand any more?', abort=True)

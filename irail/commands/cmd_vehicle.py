@@ -14,16 +14,11 @@ def is_on_the_move(vehicle):
 @click.argument('vehicle_id')
 @pass_context
 def cli(context, vehicle_id):
-    r = requests.get("http://api.irail.be/vehicle/", 
-                     params = {"id": vehicle_id,
-                               "format": "json", 
-                               "fast": "true"}).json()
-    click.secho(parse_time(r["timestamp"]) +
-                " " +
+    r = vehicle_request(vehicle_id)
+    click.secho(parse_time(r["timestamp"]) + " " +
                 str.center(r["vehicle"], context.terminal_width - 6),
                 reverse = True)
     now = datetime.now()
-    print(is_on_the_move(r["stops"]["stop"]))
     for stop in r["stops"]["stop"]:
 
         stop_time = parse_time(stop["time"])
@@ -31,8 +26,7 @@ def cli(context, vehicle_id):
         stop_delay = int(stop["delay"])
         dim = (datetime.fromtimestamp(stop_time_raw) +
                timedelta(seconds=stop_delay)) < now
-        click.secho(stop_time +
-                    parse_delay(stop["delay"])[1] +
+        click.secho(stop_time + " " +
+                    parse_delay(stop["delay"])[1] + " " +
                     stop["station"],
                     dim=dim)
-
