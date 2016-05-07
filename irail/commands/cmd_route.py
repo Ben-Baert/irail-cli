@@ -190,10 +190,10 @@ def sort_connections(connections):
 def cli(context, from_station, to_station, time, date, selection, show_vehicle):
     if not verify_date(date):
         click.echo("Date is not properly formatted (DDMMYY)")
-        raise SystemExit(0)
+        raise SystemExit(1)
     if not verify_time(time):
         click.echo("Time is not properly formatted (HHMM)")
-        raise SystemExit(0)
+        raise SystemExit(1)
     from_station = get_station(from_station)
     to_station = get_station(to_station)
 
@@ -216,7 +216,7 @@ def cli(context, from_station, to_station, time, date, selection, show_vehicle):
         if e == 9:
             for connection in optimal_connections:
                 expand_connection(context, connection, show_vehicle=show_vehicle)
-            raise SystemExit(0)
+            raise SystemExit(1)
         current = optimal_connections.pop(e)
         expand_connection(context, current, show_vehicle=show_vehicle)
         show_route_choices(optimal_connections)
