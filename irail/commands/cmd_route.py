@@ -103,7 +103,7 @@ def expand_connection(context, connection, show_vehicle):
     print("d: " + d_message)
     a_message = a_station + a_time + " " + a_platform + empty_slot
 
-    click.echo(d_message).rjust(context.terminal_width - len(departure_station))
+    click.echo(d_station + (d_time + " " + d_platform).rjust(context.terminal_width - len(d_station)))
 
     departure_vehicle_string = generate_vehicle_string(departure_info, include_number=show_vehicle)
     click.secho(departure_vehicle_string.center(context.terminal_width), reverse=True)

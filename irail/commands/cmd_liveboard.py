@@ -83,13 +83,6 @@ def cli(context, station, destination, train_type, show_vehicle, continuous):
     Example (all trains going to the beach):
     irail liveboard Gent-Sint-Pieters -d Oostende -d Blankenberge -d Knokke -d "De Panne"
     (note the "" for arguments with spaces in them)
-
-    You can also use a more comprehensive check
-    that checks every station on a vehicle's path,
-    but this is very slow and generally not recommended.
-    In most cases you're better off using the route command.
-    Example:
-    irail liveboard Gent-Sint-Pieters --vehicle-filter Aalter
     """
     # if station not found, give suggestions
     station = get_station(station)
