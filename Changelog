@@ -1,4 +1,4 @@
-Planned: Version 0.1.2 2016-05-20
+Planned: Version 0.2.2 2016-05-20
 ---------------------------------
   - Add extensive documentation
 
@@ -12,7 +12,7 @@ Planned: Version 0.2.0 2016-05-15
     - Station shortcuts (e.g. Gent-Sint-Pieters -> GSP)
     - Route shortcuts (e.g. if route is called with no arguments; look for
     favorite routes)
-    
+  - Liveboard with delays added to time option    
 
 Planned: Version 0.1.0 2016-05-10
 ---------------------------------

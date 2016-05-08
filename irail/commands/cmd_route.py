@@ -82,19 +82,29 @@ def get_info(info):
     return station, time, vehicle, platform, direction
 
 
-def expand_connection(context, connection, show_vehicle):
-    d_station, d_time, d_vehicle, d_platform, d_direction = get_info(connection["departure"])
+def get_departure_info(connection):
+    return get_info(connection["departure"])
 
-    a_station, a_time, a_vehicle, a_platform, a_direction = get_info(connection["arrival"])
+
+def get_arrival_info(connection):
+    return get_info(connection["arrival"])
+
+
+def expand_connection(context, connection, show_vehicle):
+    d_station, d_time, d_vehicle, d_platform, d_direction = get_departure_info(connection)
+
+    a_station, a_time, a_vehicle, a_platform, a_direction = get_arrival_info(connection)
 
     empty_slot = " " * 12
     duration = get_duration(connection)
     nr_of_vias = get_nr_of_vias(connection)
 
-    d_message = d_station + d_time + " "  + d_platform
+    d_message = d_station + d_time + " " + d_platform
+    print("d: " + d_message)
     a_message = a_station + a_time + " " + a_platform + empty_slot
 
     click.echo(d_message).rjust(context.terminal_width - len(departure_station))
+
     departure_vehicle_string = generate_vehicle_string(departure_info, include_number=show_vehicle)
     click.secho(departure_vehicle_string.center(context.terminal_width), reverse=True)
     if "vias" in connection:
@@ -102,6 +112,7 @@ def expand_connection(context, connection, show_vehicle):
             expand_via(context, via, show_vehicle)
         arrival_vehicle_string = generate_vehicle_string(arrival_info, include_number=show_vehicle)
         click.secho(arrival_vehicle_string.center(context.terminal_width), reverse=True)
+
     click.echo(a_message).rjust(context.terminal_width - len(arrival_station))
 
 
