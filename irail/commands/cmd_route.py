@@ -74,7 +74,7 @@ def expand_via(context, via, show_vehicle):
 
 def get_info(info):
     station = info["stationinfo"]["standardname"]
-    time = parse_time(info["time"])
+    time = timestamp_to_human_readable_time(info["time"])
     platform = get_platform(info)
     direction = info["direction"]["name"]
     return station, time, platform, direction

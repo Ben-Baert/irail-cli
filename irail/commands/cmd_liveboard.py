@@ -38,7 +38,7 @@ def make_station_header(json_object, destination_filter, context):
     liveboard in a train station.
     """
     name = json_object["stationinfo"]["standardname"]
-    station_time = parse_time(json_object["timestamp"])
+    station_time = timestamp_to_human_readable_time(json_object["timestamp"])
     direction = destination_filter or "all"
     title = name + " (direction: " + direction + ")"
     click.secho(station_time + " " +

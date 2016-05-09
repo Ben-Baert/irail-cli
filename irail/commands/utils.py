@@ -9,6 +9,14 @@ class NoConnectionsFound(Exception):
     pass
 
 
+class Connection():
+    pass
+
+
+class Via():
+    pass
+
+
 def api_request(feature, **input_params):
     headers = {'Content-type': 'application/json',
                'Accept': 'text/plain'}
@@ -76,7 +84,7 @@ def get_station_name(connection):
 
 
 def get_time(connection):
-    return parse_time(connection["time"])
+    return timestamp_to_human_readable_time(connection["time"])
 
 
 def get_arrival_time(via):
@@ -88,7 +96,7 @@ def get_arrival_platform(via):
 
 
 def get_departure_time(via):
-    return parse_time(via["departure"]["time"])
+    return timestamp_to_human_readable_time(via["departure"]["time"])
 
 
 def get_departure_platform(via):
