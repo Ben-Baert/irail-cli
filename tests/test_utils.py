@@ -1,4 +1,6 @@
-from irail.commands.utils import parse_vehicle_type, timestamp_to_human_readable_time
+from irail.commands.utils import parse_vehicle_type
+from irail.commands.utils import timestamp_to_human_readable_time
+from irail.commands.utils import *
 import pytest
 
 
