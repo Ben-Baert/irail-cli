@@ -4,9 +4,6 @@ from irail.cli import pass_context
 from irail.commands.utils import *
 
 
-
-
-
 def parse_duration(duration):
     hours, minutes = divmod(int(duration), 3600)
     return str(hours) + ":" + str(minutes // 60).rjust(2, "0")
@@ -33,16 +30,23 @@ def generate_vehicle_string(connection, include_number):
 
     return u'\u2193 ' + vehicle + " (" + direction + ") " + u'\u2193'
 
+def generate_departure_vehicle_string(connection, include_number):
+    pass
+
+
 def get_stops_for_via(via):
     pass
+
 
 def get_stops_for_vehicle(vehicle):
     pass
 
+
 def show_stop(vehicle_stop):
     pass
 
-def show_stops(context, via):
+
+def show_stops(context, via, from_station=None, to_station=None):
     vehicle = via["vehicle"]
     from_station = ""
 
@@ -56,13 +60,8 @@ def expand_via(context, via, show_vehicle):
     departure_time = get_departure_time(via)
     departure_platform = get_departure_platform(via)
 
-    vehicle = get_vehicle(via)
-    direction = get_direction(via)
-
     vehicle_string = generate_vehicle_string(via, include_number=show_vehicle)
     centered_vehicle_string = vehicle_string.center(context.terminal_width)
-
-    station_string = ""
 
     if via["id"] != "0":
         click.secho(centered_vehicle_string, reverse=True)
@@ -76,10 +75,9 @@ def expand_via(context, via, show_vehicle):
 def get_info(info):
     station = info["stationinfo"]["standardname"]
     time = parse_time(info["time"])
-    vehicle = parse_vehicle_type(info["vehicle"])
     platform = get_platform(info)
     direction = info["direction"]["name"]
-    return station, time, vehicle, platform, direction
+    return station, time, platform, direction
 
 
 def get_departure_info(connection):
@@ -91,17 +89,9 @@ def get_arrival_info(connection):
 
 
 def expand_connection(context, connection, show_vehicle):
-    d_station, d_time, d_vehicle, d_platform, d_direction = get_departure_info(connection)
+    d_station, d_time, d_platform, d_direction = get_departure_info(connection)
 
-    a_station, a_time, a_vehicle, a_platform, a_direction = get_arrival_info(connection)
-
-    empty_slot = " " * 12
-    duration = get_duration(connection)
-    nr_of_vias = get_nr_of_vias(connection)
-
-    d_message = d_station + d_time + " " + d_platform
-    print("d: " + d_message)
-    a_message = a_station + a_time + " " + a_platform + empty_slot
+    a_station, a_time, a_platform, a_direction = get_arrival_info(connection)
 
     click.echo(d_station + (d_time + " " + d_platform).rjust(context.terminal_width - len(d_station)))
 
@@ -113,7 +103,8 @@ def expand_connection(context, connection, show_vehicle):
         arrival_vehicle_string = generate_vehicle_string(arrival_info, include_number=show_vehicle)
         click.secho(arrival_vehicle_string.center(context.terminal_width), reverse=True)
 
-    click.echo(a_message).rjust(context.terminal_width - len(arrival_station))
+    (click.echo(a_station + (a_time + " " + a_platform + (" " * 12))
+              .rjust(context.terminal_width - len(arrival_station))))
 
 
 def make_route_header(context, from_station, to_station):
@@ -132,13 +123,8 @@ def route_overview(connection):
 
 def show_route_choices(connections):
     for index, connection in enumerate(connections):
-        departure_info = connection["departure"]
-        departure_time = parse_time(departure_info["time"])
-        departure_platform = departure_info["platform"]
-        departure_direction = departure_info["direction"]
-        arrival_info = connection["arrival"]
-        arrival_time = parse_time(arrival_info["time"])
-        arrival_platform = arrival_info["platform"]
+        d_station, d_time, d_platform, d_direction = get_departure_info(connection)
+        a_station, a_time, a_platform, a_direction = get_arrival_info(connection)
         duration = get_duration(connection)
         nr_of_vias = get_nr_of_vias(connection)
 

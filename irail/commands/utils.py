@@ -1,18 +1,13 @@
 import requests
 import pytz
 from datetime import datetime
-import json
 import click
 import re
 
 
-"""
-Utilities used in at least 2 of the 3
-features go here.
-"""
-
 class NoConnectionsFound(Exception):
     pass
+
 
 def api_request(feature, **input_params):
     headers = {'Content-type': 'application/json',
@@ -44,6 +39,9 @@ def api_request(feature, **input_params):
     except ValueError:
         print(r.url)
         click.echo("The api doesn't seem to be working properly.")
+        raise SystemExit(1)
+    if "error" in json_data:
+        click.echo("The api works, but sent a {} error code: {}".format(json_data["error"], json_data["message"]))
         raise SystemExit(1)
     return json_data
 
@@ -101,14 +99,17 @@ def get_vehicle(connection, include_number=False):
     return parse_vehicle_type(connection["vehicle"], include_number)
 
 
-def parse_time(timestamp, include_date=False):
+def timestamp_to_human_readable_time(timestamp, include_date=False):
     """
     Takes a timestamp, returns
     a human-readable (HH:MM)
     time string.
     """
+    if not (len(timestamp) == 10 and all(c.isdigit() for c in timestamp)):
+        raise ValueError("Timestamp {} is invalid and cannot be converted".format(timestamp))
     timezone = pytz.timezone('Europe/Brussels')
-    return datetime.fromtimestamp(int(timestamp), timezone).strftime("%H:%M (%d/%m/%Y)" if include_date else "%H:%M")
+    return (datetime.fromtimestamp(int(timestamp), timezone)
+                    .strftime("%H:%M (%d/%m/%Y)" if include_date else "%H:%M"))
 
 
 def parse_platform(platform, platform_changed):
@@ -136,11 +137,11 @@ def parse_vehicle_type(vehicle, include_number=False):
     and returns a human-readable
     version of its type (e.g. IC, L)
     """
-    matches = re.match(r'BE.NMBS.([A-Z]{1,3})(\d{1,4})', vehicle)
+    matches = re.match(r'(?:BE.NMBS.)?([A-Z]{1,3})(\d{1,4})', vehicle)
     try:
         train_type = matches.group(1)
-    except:
-        print(vehicle)
+    except AttributeError:
+        raise ValueError("{} is not a valid vehicle".format(vehicle))
     train_number = matches.group(2)
     return train_type + (train_number if include_number else "")
 

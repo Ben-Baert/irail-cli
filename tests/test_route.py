@@ -1,15 +1,12 @@
 import random
 from datetime import datetime
-from irail.commands.cmd_route import verify_date, verify_time
+from irail.commands.cmd_route import verify_date, verify_time, parse_duration
 
 
 def test_time_verification():
     acceptable_hours = [str(x).zfill(2) for x in range(0, 24)]
     acceptable_minutes = [str(x).zfill(2) for x in range(0, 60)]
-    valid_times = ["0000",
-                   "0100",
-                   "0110",
-                   "2359"]
+    valid_times = [random.choice(acceptable_hours) + random.choice(acceptable_minutes) for _ in range(10)]
     invalid_times = ["000",
                      "159",
                      "2536",
@@ -29,3 +26,6 @@ def test_date_verification():
                      random.choice(acceptable_months) +
                      random.choice(acceptable_years))
         assert verify_date(test_case) is True
+
+def test_parse_duration():
+    pass
