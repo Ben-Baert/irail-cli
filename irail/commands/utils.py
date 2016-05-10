@@ -5,18 +5,6 @@ import click
 import re
 
 
-class NoConnectionsFound(Exception):
-    pass
-
-
-class Connection():
-    pass
-
-
-class Via():
-    pass
-
-
 def api_request(feature, **input_params):
     headers = {'Content-type': 'application/json',
                'Accept': 'text/plain'}
@@ -76,34 +64,34 @@ def route_request(from_station, to_station, date=None, time=None, time_selection
 
 
 def get_platform(connection):
-    return parse_platform(connection["platforminfo"]["name"],
+    return human_readable_platform_from_platforminfo(connection["platforminfo"]["name"],
                           connection["platforminfo"]["normal"])
 
-def get_station_name(connection):
+def get_station_from_user_input_name_from_connection(connection):
     return connection["stationinfo"]["standardname"]
 
 
-def get_time(connection):
+def get_time_from_connection(connection):
     return timestamp_to_human_readable_time(connection["time"])
 
 
-def get_arrival_time(via):
-    return parse_time(via["arrival"]["time"])
+def get_arrival_time_from_via(via):
+    return timestamp_to_human_readable_time(via["arrival"]["time"])
 
 
-def get_arrival_platform(via):
+def get_arrival_platform_from_via(via):
     return get_platform(via["arrival"])
 
 
-def get_departure_time(via):
+def get_departure_time_from_via(via):
     return timestamp_to_human_readable_time(via["departure"]["time"])
 
 
-def get_departure_platform(via):
+def get_departure_platform_from_via(via):
     return get_platform(via["departure"])
 
 
-def get_vehicle(connection, include_number=False):
+def get_human_readable_vehicle_from_connection(connection, include_number=False):
     return parse_vehicle_type(connection["vehicle"], include_number)
 
 
@@ -120,7 +108,7 @@ def timestamp_to_human_readable_time(timestamp, include_date=False):
                     .strftime("%H:%M (%d/%m/%Y)" if include_date else "%H:%M"))
 
 
-def parse_platform(platform, platform_changed):
+def human_readable_platform_from_platforminfo(platform, platform_changed):
     """
     Apply style to platform string.
     If platform is normal, simply return platform.
@@ -166,7 +154,7 @@ def safe_trains_extract(irail_json_object):
         return []
 
 
-def get_station(suggestion):
+def get_station_from_user_input(suggestion):
     """
     Takes a potential train station
     (e.g. Gent) and returns possibilities.
@@ -193,11 +181,11 @@ def get_station(suggestion):
     return suggestions[station_index]["name"]
 
 
-def get_delay(connection):
-    return parse_delay(connection["delay"])
+def get_human_readable_delay_from_connection(connection):
+    return human_readable_delay_from_delay_string(connection["delay"])
 
 
-def parse_delay(delay_str):
+def human_readable_delay_from_delay_string(delay_str):
     if delay_str == "0":
         return False, "   "
     elif delay_str == "cancel":

@@ -1,6 +1,6 @@
 import random
 from datetime import datetime
-from irail.commands.cmd_route import verify_date, verify_time, parse_duration
+from irail.commands.cmd_route import verify_date, verify_time, duration_int_to_human_readable_duration
 
 
 def test_time_verification():
@@ -27,5 +27,5 @@ def test_date_verification():
                      random.choice(acceptable_years))
         assert verify_date(test_case) is True
 
-def test_parse_duration():
+def test_duration_int_to_human_readable_duration():
     pass

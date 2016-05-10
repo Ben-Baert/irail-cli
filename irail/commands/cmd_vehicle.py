@@ -27,6 +27,6 @@ def cli(context, vehicle_id):
         dim = (datetime.fromtimestamp(stop_time_raw) +
                timedelta(seconds=stop_delay)) < now
         click.secho(stop_time + " " +
-                    parse_delay(stop["delay"])[1] + " " +
+                    human_readable_delay_from_delay_string(stop["delay"])[1] + " " +
                     stop["station"],
                     dim=dim)

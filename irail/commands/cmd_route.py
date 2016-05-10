@@ -4,13 +4,13 @@ from irail.cli import pass_context
 from irail.commands.utils import *
 
 
-def parse_duration(duration):
+def duration_int_to_human_readable_duration(duration):
     hours, minutes = divmod(int(duration), 3600)
     return str(hours) + ":" + str(minutes // 60).rjust(2, "0")
 
 
 def get_duration(connection):
-    return parse_duration(connection["duration"])
+    return duration_int_to_human_readable_duration(connection["duration"])
 
 
 def get_nr_of_vias(connection):
@@ -25,7 +25,7 @@ def get_direction(connection):
 
 
 def generate_vehicle_string(connection, include_number):
-    vehicle = get_vehicle(connection, include_number=include_number)
+    vehicle = get_human_readable_vehicle_from_connection(connection, include_number=include_number)
     direction = get_direction(connection)
 
     return u'\u2193 ' + vehicle + " (" + direction + ") " + u'\u2193'
@@ -52,13 +52,13 @@ def show_stops(context, via, from_station=None, to_station=None):
 
 
 def expand_via(context, via, show_vehicle):
-    station_name = get_station_name(via)
+    station_name = get_station_from_user_input_name_from_connection(via)
 
-    arrival_time = get_arrival_time(via)
-    arrival_platform = get_arrival_platform(via)
+    arrival_time = get_arrival_time_from_via(via)
+    arrival_platform = get_arrival_platform_from_via(via)
 
-    departure_time = get_departure_time(via)
-    departure_platform = get_departure_platform(via)
+    departure_time = get_departure_time_from_via(via)
+    departure_platform = get_departure_platform_from_via(via)
 
     vehicle_string = generate_vehicle_string(via, include_number=show_vehicle)
     centered_vehicle_string = vehicle_string.center(context.terminal_width)
@@ -115,8 +115,8 @@ def make_route_header(context, from_station, to_station):
 
 
 def route_overview(connection):
-    return (get_departure_time(connection),
-            get_arrival_time(connection),
+    return (get_departure_time_from_via(connection),
+            get_arrival_time_from_via(connection),
             get_duration(connection),
             str(get_nr_of_vias(connection)))
 
@@ -191,8 +191,8 @@ def cli(context, from_station, to_station, time, date, selection, show_vehicle):
     if not verify_time(time):
         click.echo("Time is not properly formatted (HHMM)")
         raise SystemExit(1)
-    from_station = get_station(from_station)
-    to_station = get_station(to_station)
+    from_station = get_station_from_user_input(from_station)
+    to_station = get_station_from_user_input(to_station)
 
     make_route_header(context, from_station, to_station)
 

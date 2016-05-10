@@ -5,32 +5,13 @@ from irail.cli import pass_context
 from irail.commands.utils import *
 
 
-def get_direction(connection):
+def get_direction_from_connection(connection):
     return connection["stationinfo"]["name"]
 
 
-def get_platform(connection):
+def get_platform_from_connection(connection):
     return connection["platforminfo"]["name"], not(bool(connection["platforminfo"]["normal"]))
 
-
-def is_match(stop, arrival_station):
-    return stop.lower().startswith(arrival_station.lower())
-
-
-def get_vehicle_stops(vehicle_id):
-    """
-    Get all the station a vehicle serves
-    """
-    try:
-        v = requests.get(
-                "http://api.irail.be/vehicle/",
-                params={
-                    "fast": "true",
-                    "format": "json",
-                    "id": vehicle_id}).json()
-        return v["stops"]["stop"]
-    except (KeyError, ValueError):
-        return []  # error?
 
 def make_station_header(json_object, destination_filter, context):
     """
@@ -85,7 +66,7 @@ def cli(context, station, destination, train_type, show_vehicle, continuous):
     (note the "" for arguments with spaces in them)
     """
     # if station not found, give suggestions
-    station = get_station(station)
+    station = get_station_from_user_input(station)
     click.clear()
     while True:
         r = requests.get("http://api.irail.be/liveboard/",
@@ -98,13 +79,13 @@ def cli(context, station, destination, train_type, show_vehicle, continuous):
 
         count = 0
         for train in trains:
-            type_of_train = get_vehicle(train, include_number=show_vehicle)
+            type_of_train = get_human_readable_vehicle_from_connection(train, include_number=show_vehicle)
             if train_type and not any(type_of_train.startswith(tt) for tt in train_type):
                 continue
-            normal_departure_time = get_time(train)
-            cancelled, delay = get_delay(train)
-            platform, platform_changed = get_platform(train)
-            direction = get_direction(train)
+            normal_departure_time = get_time_from_connection(train)
+            cancelled, delay = get_human_readable_delay_from_connection(train)
+            platform, platform_changed = get_platform_from_connection(train)
+            direction = get_direction_from_connection(train)
 
             if destination and not any(direction.lower().startswith(d.lower()) for d in destination):
                 continue
