@@ -161,7 +161,22 @@ def get_station_from_user_input(suggestion):
     User can then choose the exact train
     station (e.g. Gent-Sint-Pieters)
     from these possibilities.
+    
+    Example:
+    bash-4.3$ irail liveboard gent
+    0: Gent-Sint-Pieters
+    1: Gent-Dampoort
+    2: Gentbrugge
+    Which station do you mean by gent?: 0
     """
+    
+    def try_station_index():
+        station_index = click.prompt("Which station do you mean by {0}?".format(suggestion), type=int)
+        try:
+            return suggestions[station_index]["name"]
+        except IndexError:
+            click.echo("The station with #{} is not in the list. Please provide a valid index.".format(station_index))
+            return try_station_index()
 
     json_data = station_request(suggestion)
 
@@ -172,13 +187,11 @@ def get_station_from_user_input(suggestion):
 
     elif len(suggestions) == 0:
         click.echo("No station like {0} found.".format(suggestion))
-        raise SystemExit(0)
+        raise SystemExit(1)
     else:
         for index, station in enumerate(suggestions):
             click.echo(str(index) + ": " + station["name"])
-        station_index = click.prompt("Which station do you mean by {0}?".format(suggestion), type=int)
-
-    return suggestions[station_index]["name"]
+        return try_station_index()
 
 
 def get_human_readable_delay_from_connection(connection):
